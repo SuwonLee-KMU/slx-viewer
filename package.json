@@ -2,7 +2,7 @@
   "name": "slx-viewer",
   "displayName": "Simulink Diagram Viewer",
   "description": "Read-only block diagrams and subsystem navigation for Simulink SLX models.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "SuwonLee",
   "engines": {
     "vscode": "^1.85.0"

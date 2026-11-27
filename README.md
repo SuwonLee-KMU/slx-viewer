@@ -2,6 +2,10 @@
 
 Open an `.slx` file in VS Code, or select it in Finder and press Space. Both extensions display the saved block layout and signal branches. VS Code lets you open nested blocks, follow the breadcrumb back, and zoom. Finder shows each subsystem below the top-level diagram.
 
+![The Moving average subsystem in TemperatureMonitor.slx, with a signal branch, a unit delay, a sum and a gain of 0.5.](media/moving-average.png)
+
+The moving average combines the current temperature reading with the previous sample. Click the model name above the diagram to return to the top level.
+
 ## Install the VS Code extension
 
 Download [slx-viewer.vsix from the latest release](https://github.com/SuwonLee-KMU/slx-viewer/releases/latest/download/slx-viewer.vsix). In VS Code, open Extensions, select the **…** menu, and choose **Install from VSIX**. Open an SLX model and click a subsystem to inspect its diagram.
