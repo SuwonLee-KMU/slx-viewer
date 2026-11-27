@@ -1,0 +1,51 @@
+{
+  "name": "slx-viewer",
+  "displayName": "Simulink Diagram Viewer",
+  "description": "Read-only block diagrams and subsystem navigation for Simulink SLX models.",
+  "version": "0.1.0",
+  "publisher": "suwon",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Visualization"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onCustomEditor:slxViewer.diagram"
+  ],
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "slxViewer.diagram",
+        "displayName": "Simulink Diagram Viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.slx"
+          },
+          {
+            "filenamePattern": "*.SLX"
+          }
+        ],
+        "priority": "default"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "npm run build && node --test tests/viewer.test.js",
+    "package": "npm run build && vsce package --no-dependencies --skip-license --out dist/slx-viewer.vsix"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "^0.9.8",
+    "fflate": "^0.8.2"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "4.1.1",
+    "esbuild": "^0.25.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SuwonLee-KMU/slx-viewer.git"
+  }
+}

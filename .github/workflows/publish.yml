@@ -1,0 +1,58 @@
+name: Publish extension
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify version and build
+        run: |
+          test "$GITHUB_REF_NAME" = "v$(node -p "require('./package.json').version")"
+          npm ci
+          npm test
+          npm run package
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release download "$GITHUB_REF_NAME" -p slx-viewer.vsix -D "$RUNNER_TEMP"
+          else
+            gh release create "$GITHUB_REF_NAME" dist/slx-viewer.vsix --verify-tag --title "$GITHUB_REF_NAME" --notes "Download slx-viewer.vsix and use **Extensions → Install from VSIX** in VS Code."
+          fi
+
+  marketplace:
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - name: Publish GitHub release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "$GITHUB_REF_NAME" -p slx-viewer.vsix -D "$RUNNER_TEMP"
+          ./node_modules/.bin/vsce publish --oidc --skip-duplicate --packagePath "$RUNNER_TEMP/slx-viewer.vsix"

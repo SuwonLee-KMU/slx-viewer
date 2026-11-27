@@ -1,0 +1,42 @@
+name: SLXPreview
+options:
+  deploymentTarget:
+    macOS: "13.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    ENABLE_HARDENED_RUNTIME: YES
+targets:
+  SLX Preview:
+    type: application
+    platform: macOS
+    sources: [Host/App.swift]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: kr.ac.kookmin.fmcl.SLXPreview
+        INFOPLIST_FILE: Host/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Sandbox.entitlements
+    dependencies:
+      - target: DiagramPreview
+        embed: true
+  DiagramPreview:
+    type: app-extension
+    platform: macOS
+    sources:
+      - Preview/PreviewProvider.swift
+      - Preview/DiagramHTML.swift
+      - path: ../dist/preview.js
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: kr.ac.kookmin.fmcl.SLXPreview.Diagram
+        INFOPLIST_FILE: Preview/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Sandbox.entitlements
+        SKIP_INSTALL: YES
+schemes:
+  SLX Preview:
+    build:
+      targets:
+        SLX Preview: all
